@@ -39,7 +39,9 @@ class LuaRenderer(object):
         # on the instance so calls to template_vars don't need to concern
         # themselves with what it needs.
         self._app = app
-        self._partial_path = arguments[0]
+        self._partial_path = None
+        if arguments:
+            self._partial_path = arguments[0]
         self._content = content or StringList()
         self._options = options or {}
 
@@ -156,6 +158,29 @@ class AutoClassRenderer(LuaRenderer):
         RstParser().parse(rst, doc)
         return doc.children
 
+class AutoAllRenderer(LuaRenderer):
+    _template = 'class.rst'
+
+    def rst_nodes(self):
+        """Render into RST nodes a thing shaped like a function, having a name
+        and arguments.
+
+        Fill in args, docstrings, and info fields from stored LUADoc output.
+
+        """
+        doc = new_document('luaall', settings=self._directive.state.document.settings)
+
+        # export every for class
+        for mod in self._app._sphinxlua_modules:
+            for cls in mod.classes:
+                rst = self.rst(dict(
+                    name=cls.name,
+                    model=cls,
+                    file_path=os.path.relpath(mod.file_path, self._app.confdir),
+                    options=self._options
+                ))
+                RstParser().parse(rst, doc)
+        return doc.children
 
 class AutoModuleRenderer(LuaRenderer):
     _template = 'module.rst'
