@@ -1,9 +1,7 @@
-{%- if method.is_static -%}
-.. lua:staticmethod::
-{%- else -%}
-.. lua:method::
-{%- endif -%}
-{{ " " + method.name }}({% with function=method %}{% include "param_list.rst" %}{% endwith -%})
+
+{{ model.name + ":" + method.name }}({% with function=method %}{% include "param_list.rst" %}{% endwith -%})
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 {%- filter indent(width=4) %}
 {% if method.is_virtual -%}
 :virtual:
@@ -25,26 +23,40 @@
 {{ method.desc | process_link }}
 {%- endif %}
 
+
+
+{% if method.params -%}
+**Parameters:**
+	
+{%- endif %}
+
 {% for param in method.params -%}
 {%- with type=param.type -%}
 {%- if param.name == "..." -%}
 :param vararg: {{ param.desc|process_link }}
 :type vararg: {% include "type.rst" %}
 {% else -%}
-:param {{ param.name }}: {{ param.desc|process_link }}
-:type {{ param.name }}: {% include "type.rst" %}
+{{ "	- " + param.name }} :code:`{% include "type.rst" %}` {{ param.desc|process_link }}
+
 {% endif -%}
 {% endwith -%}
 {%- endfor -%}
 
+
+
+{% if method.returns -%}
+**Returns:**
+	
+{%- endif %}
+
 {% for return in method.returns -%}
 {% with type=return.type %}
-{%- if return.desc -%}
-:return: {{ return.desc }}
-{%- endif %}
-:rtype: {% include "type.rst" %}
+	- :code:`{% include "type.rst" %}` {{ return.desc }}
+
 {% endwith %}
 {%- endfor -%}
+
+
 
 {%- if method.usage %}
 **Usage:**

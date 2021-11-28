@@ -1,13 +1,12 @@
-.. lua:class:: {{ model.name }}
+{{ model.name }}
 {%- if model.inherits_from -%}
 {{ ": " }}
 {%- for base in model.inherits_from -%}
 {{ base }}{{ ", " if not loop.last }}
 {%- endfor -%}
 {%- endif %}
-    {# reset module for single class -#}
-    {% if not module %}:module:{%- endif %}
-{%- filter indent(width=4) %}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 {% if model.short_desc -%}
 {{ model.short_desc | process_link }}
@@ -47,4 +46,3 @@
 {%- include "method.rst"|indent(4) %}
 {%- endif %}
 {%- endfor %}
-{%- endfilter %}

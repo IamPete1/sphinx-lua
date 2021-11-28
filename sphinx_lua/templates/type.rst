@@ -13,7 +13,7 @@
 {%- elif type.id == "number" -%}
     number
 {%- elif type.id == "string" -%}
-    str
+    string
 {%- elif type.id == "nil" -%}
     nil
 {%- elif type.id == "custom" -%}
